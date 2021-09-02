@@ -5,7 +5,7 @@ var roles = ["500973287128563714","786976035387736129","802572048924409856","802
 
 
 // Login du bot
-client.login('ODgzMDAxODM1MDU1NjQwNjk2.YTDlig.0dxQlRLxvd7LQ1rIzcJuSFPyexs');
+client.login('ODgzMDAxODM1MDU1NjQwNjk2.YTDlig.cTHm6rH0gwlcNh-OcGdWhHdybvQ');
 
 
 // Confirme que le bot est prêt
