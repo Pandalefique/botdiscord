@@ -27,6 +27,10 @@ client.on("messageCreate", function (message) {
         case "-ping": message.reply("pong !!!") //si envoi ping
         break;
     }
+    //------------------------------------------------//
+    //---------------clear de messages----------------//
+    //------------------------------------------------//
+
     if (messRecu.startsWith("-clear")) {
         //Verification role utilisateur
         valid=false
@@ -40,9 +44,32 @@ client.on("messageCreate", function (message) {
             membre=message.member.displayName //stock nom de l'utilisateur
             suppr=messRecu.substr(7) //on cherche le nombre
             suppr=parseInt(suppr) //converti en number
+            messsupp=3
             if(typeof suppr == "number"){ //si suppr est bien un nombre
-                channelMess.bulkDelete(suppr+1) //supprimer le nombre de messages indiqués
-                channelMess.send(suppr+" messages ont été supprimés par "+membre) //afficher combien de messages ont été supprimés par qui
+                channelMess.messages.fetch({ limit: suppr+2 }).then(messages => {
+                    console.log(`Received ${messages.size} messages`);
+                    i=-1
+                    messages.forEach(message => {
+                        console.log(message.content)
+                        i=i+1
+                        if(i==suppr){
+                            channelMess.send("Vous allez supprimer jusqu'a **''"+message.content+"''** écris par **"+message.member.displayName+"** veuillez écrire ''oui'' pour valider ou ''non'' pour annuler")
+                            client.on("messageCreate", function (messagevalid) {
+                                if(messagevalid.member.displayName==membre && i!=0){
+                                if(messagevalid.content=="oui" ){
+                                    channelMess.bulkDelete(suppr+messsupp) //supprimer le nombre de messages indiqués
+                                    channelMess.send(suppr+" messages ont été supprimés par "+membre) //afficher combien de messages ont été supprimés par qui
+                                    i=0
+                                }
+                                else if(messagevalid.content=="non"){
+                                    channelMess.bulkDelete(messsupp) //supprimer le nombre de messages indiqués
+                                    i=0
+                                }
+                                messsupp++
+                            }})
+                        }
+                    });
+                  })
             }
             else{ //si suppr n'est pas un nombre, donc il y a une faute de frappe
                 channelMess.send("alors, ouai mais c'est pas comme ça que ça marche en fait...") //envoyer message d'erreur
